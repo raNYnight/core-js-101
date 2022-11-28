@@ -1,3 +1,8 @@
+/* eslint-disable comma-spacing */
+/* eslint-disable semi */
+/* eslint-disable no-undef */
+/* eslint-disable padded-blocks */
+/* eslint-disable no-trailing-spaces */
 /* *********************************************************************************************
  *                                                                                             *
  * Please read the following tutorial before implementing tasks:                                *
@@ -23,8 +28,9 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
-function getComposition(/* f, g */) {
-  throw new Error('Not implemented');
+function getComposition(f, g) {
+  const compose = (...fns) => (x) => fns.reduceRight((y, z) => z(y), x);
+  return compose(f,g)
 }
 
 
