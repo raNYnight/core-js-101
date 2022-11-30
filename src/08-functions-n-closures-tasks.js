@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-restricted-properties */
 /* eslint-disable comma-spacing */
 /* eslint-disable semi */
 /* eslint-disable no-undef */
@@ -50,8 +52,8 @@ function getComposition(f, g) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return (x) => Math.pow(x,exponent)
 }
 
 
