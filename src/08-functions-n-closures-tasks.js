@@ -31,8 +31,10 @@
  *
  */
 function getComposition(f, g) {
-  const compose = (...fns) => (x) => fns.reduceRight((y, z) => z(y), x);
-  return compose(f,g)
+  return function compose(x) {
+    return f(g(x))
+  }
+
 }
 
 
