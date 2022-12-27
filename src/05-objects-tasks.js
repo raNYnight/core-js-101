@@ -20,8 +20,14 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  return {
+    height,
+    width,
+    getArea() {
+      return width * height;
+    },
+  };
 }
 
 
@@ -35,8 +41,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 
@@ -51,8 +57,9 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const descriptors = Object.getOwnPropertyDescriptors(JSON.parse(json));
+  return Object.create(proto, descriptors);
 }
 
 
@@ -111,32 +118,95 @@ function fromJSON(/* proto, json */) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  result: '',
+  order: 0,
+  occurEl: 0,
+  occurId: 0,
+  occurPE: 0,
+  // eslint-disable-next-line no-unused-vars
+  checkOrder(order) {
+    if (this.order > order) {
+    // eslint-disable-next-line max-len
+      throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    }
+  },
+  // eslint-disable-next-line no-unused-vars
+  checkOccur(occur) {
+    // eslint-disable-next-line max-len
+    if (occur === 1) {
+      console.log(occur);
+      throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
+  },
+  element(value) {
+    this.checkOrder(1);
+    this.checkOccur(this.occurEl);
+    // this.occurEl = 1;
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.order = 1;
+    // cssObject.checkOccur(cssObject.occurEl);
+    cssObject.occurEl = 1;
+    cssObject.result = `${this.result}${value}`;
+
+    return cssObject;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    this.checkOrder(2);
+    this.checkOccur(this.occurId);
+    const cssObject = Object.create(cssSelectorBuilder);
+    // cssObject.checkOccur(cssObject.occurEl);
+    cssObject.order = 2;
+    cssObject.occurId = 1;
+    cssObject.result = `${this.result}#${value}`;
+    return cssObject;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.checkOrder(3);
+
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.order = 3;
+    cssObject.result = `${this.result}.${value}`;
+    return cssObject;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.checkOrder(4);
+
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.order = 4;
+    cssObject.result = `${this.result}[${value}]`;
+    return cssObject;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.checkOrder(5);
+
+    const cssObject = Object.create(cssSelectorBuilder);
+    cssObject.order = 5;
+    cssObject.result = `${this.result}:${value}`;
+    return cssObject;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    this.checkOrder(6);
+    this.checkOccur(this.occurPE);
+    const cssObject = Object.create(cssSelectorBuilder);
+    // cssObject.checkOccur(cssObject.occurEl);
+    cssObject.order = 6;
+    cssObject.occurPE = 1;
+    cssObject.result = `${this.result}::${value}`;
+    return cssObject;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const comb = Object.create(cssSelectorBuilder);
+    comb.result = `${selector1.result} ${combinator} ${selector2.result}`;
+    return comb;
+  },
+  stringify() {
+    return this.result;
   },
 };
 
