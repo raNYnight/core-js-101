@@ -134,7 +134,6 @@ const cssSelectorBuilder = {
   checkOccur(occur) {
     // eslint-disable-next-line max-len
     if (occur === 1) {
-      console.log(occur);
       throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
     }
   },
